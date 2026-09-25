@@ -76,8 +76,8 @@ jobs:
         with:
           pyvista: true
 
-      # sphinx-gallery's `pypandoc` notebook conversion needs the pandoc binary.
-      - run: sudo apt-get install -y pandoc
+      # PYVISTA_OFF_SCREEN makes VTK use OSMesa, not the X display; pandoc is for `pypandoc`.
+      - run: sudo apt-get install -y libosmesa6-dev libgl1-mesa-dev pandoc
 
       # Only the dependency-group pins are rewritten; a direct reference in the
       # `jupyter` extra would make PyVista's own wheel unbuildable.
@@ -101,6 +101,7 @@ jobs:
         run: |
           shopt -s nullglob
           for f in doc/sphinx_warnings.txt doc/errors.txt /tmp/sphinx-err-*.log; do
+            [ -e "$f" ] || continue
             echo "::group::$f"
             cat "$f"
             echo "::endgroup::"
