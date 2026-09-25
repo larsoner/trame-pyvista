@@ -106,3 +106,9 @@ jobs:
             cat "$f"
             echo "::endgroup::"
           done
+
+      - name: Test Documentation Images
+        if: ${{ !cancelled() }}
+        working-directory: pyvista
+        run: tox r -e docs-test-images
+
